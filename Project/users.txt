@@ -1,0 +1,13 @@
+John;Smith;123 Main St;M
+Jane;Doe;456 Elm St;F
+David;Johnson;789 Oak St;M
+Emily;Williams;321 Pine St;F
+Michael;Brown;567 Maple Ave;M
+Olivia;Davis;890 Cedar Rd;F
+William;Wilson;432 Birch Ln;M
+Sophia;Lee;765 Willow Dr;F
+James;Miller;987 Elmwood Ct;M
+Emma;Taylor;654 Oakwood Rd;F
+Tom;Wiliams;Candle St 45;M
+Kevin;McLaren;12.12.23;M
+
