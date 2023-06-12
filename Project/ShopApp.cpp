@@ -123,6 +123,8 @@ void ShopApp::newUserCreator(vector<Client>& clients) {
 
  }
 
+
+
 void ShopApp::loadProductFromFile(std::vector<Product> &products){
      fstream productFile;
      productFile.open("/Users/yan.boika/Documents/programming/C++/endProject/product.txt");
@@ -167,10 +169,122 @@ void ShopApp::loadProductFromFile(std::vector<Product> &products){
      }
  }
 
+void saveOrderInfoToTekstFile(Client client, Order order){
+     fstream orderFile;
+     orderFile.open("/Users/yan.boika/Documents/programming/C++/endProject/order.txt", std::ios::app); // std::ios::app чтобы записать в конец файла
+
+     if(orderFile.is_open()){
+         orderFile << "Order of: " << client.getName() << " "<< client.getLastName() << " user " << endl;
+         orderFile <<  "Product Name: " << order.getProduct() << endl;
+         orderFile << "Product Count: " << order.getCount() << endl;
+         orderFile << "VAT Rate: " << order.getVatRate() << endl;
+         orderFile << "Price: " << order.getPrice() * order.getCount() << endl;
+         orderFile << "Delivery Date: " << order.getOrderDate() << endl;
+         orderFile << "Total Value: " << order.getOrderValue() << endl;
+         orderFile << "Payment Method: " << order.getPaymentMethod() << endl;
+
+         orderFile << "------------------------" << endl;
+         orderFile << endl;
+     }
+     orderFile.close();
+ }
+
+ void ShopApp::createOrder(vector<Client>& clients, std::vector<Product> &products, map<string, Order>& orders) {
+     int n = 0;
+     char decision;
+     string userName;
+     string userLastName;
+     cout << "Let's create your order! " << endl << endl;
+     cout << "Please enter your name to confirm that you are a user: ";
+     cin >> userName;
+     cout << "Now, please enter your last name: ";
+     cin >> userLastName;
+     cout << endl;
+
+     for (const auto& client : clients) {
+         if (client.getName() == userName && client.getLastName() == userLastName) {
+             cout << "OK, let's create your order." << endl;
+
+             // Просмотр доступных продуктов
+             showAvailableProducts(products);
+
+             string productName;
+             cout << "Enter the product name: ";
+             cin.ignore();
+             getline(cin, productName);
+
+             bool productFound = false;
+
+             for(const auto& product : products){
+                 if(product.getProductName() == productName){
+                     productFound = true;
+
+                     while(n != 1){
+                         // Найден продукт, запрашиваем количество
+                         int productCount;
+                         cout << "Enter the product count: ";
+                         cin >> productCount;
+
+                         if(productCount <= product.getQuantity()){
+                             string paymentMethod;
+                             cout << "Enter the way you want to pay (DebitCard, Cash, Crypto): ";
+                             cin >> paymentMethod;
+
+                             while (true) {
+                                 if (paymentMethod == "DebitCard" || paymentMethod == "Cash" || paymentMethod == "Crypto") {
+                                     break;
+                                 }else{
+                                     cout << "Invalid payment method. Please enter a valid payment method: ";
+                                     cin >> paymentMethod;
+                                 }
+                             }
+
+                             string deliveryDate;
+                             cout << "Enter when you want to get your order (DD.MM.YYYY): ";
+                             cin.ignore();
+                             getline(cin, deliveryDate);
+
+                             double totalValue = (product.getPrice() * (1 + (product.getVatRate())/100)) * productCount;
+
+                             // Создание нового заказа
+                             Order newOrder(productName, productCount, product.getVatRate(), product.getPrice(), deliveryDate, totalValue, paymentMethod);
+
+                             // Добавление заказа в список заказов по фамилии, т.к имена могут повторяться
+                             orders.insert(pair<string, Order>(userLastName, newOrder));
+
+                             cout << "Maybe you want to edit your order: (Y/N) ";
+                             cin >> decision;
+                             if(decision == 'N'){
+                                 cout << "Order created successfully." << endl;
+                                 saveOrderInfoToTekstFile(client, newOrder);
+                                 n = 1;
+                                 return;
+                             }
+                         } else {
+                             cout << "Not enough quantity available. Please enter a lower quantity." << endl;
+                         }
+                     }
+                 }
+             }
+
+             if(!productFound){
+                 cout << "Product not found." << endl;
+                 return;
+             }
+         }
+     }
+
+     cout << "User not found." << endl;
+ }
+
+
 void ShopApp::run(){
      int userCount = takeUserCount();
      vector<Client> clients;
      vector<Product> products;
+     map<string, Order> orders;
+     loadClientFromFile(clients, userCount);
+     loadProductFromFile(products);
 
      int n;
      menu();
@@ -181,12 +295,18 @@ void ShopApp::run(){
                 menu();
                 break;
             case 2:
-                 newUserCreator(clients);
-                 userCount++;
-                 break;
+                newUserCreator(clients);
+                userCount++;
+                break;
              case 3:
                  showAvailableProducts(products);
                  break;
+             case 4:
+                 createOrder(clients, products, orders);
+                 break;
+            case 6:
+                showUserList(clients);
+                break;
              case 10:
                  cout << "Okay, we are ending our session :)" << endl;
                  return; // Завершить программу

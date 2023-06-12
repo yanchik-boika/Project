@@ -1,0 +1,29 @@
+Order of: James Miller user 
+Product Name: AirTag
+Product Count: 2
+VAT Rate: 10
+Price: 58
+Delivery Date: 12.06.23
+Total Value: 63.8
+Payment Method: DebitCard
+------------------------
+
+Order of: Kevin McLaren user 
+Product Name: AirTag
+Product Count: 4
+VAT Rate: 10
+Price: 116
+Delivery Date: 
+Total Value: 127.6
+Payment Method: 1
+------------------------
+
+Order of: James Pirs user 
+Product Name: iPhone 14 Pro
+Product Count: 2
+VAT Rate: 20
+Price: 2200
+Delivery Date: 15.06.23
+Total Value: 2640
+Payment Method: Crypto
+------------------------
