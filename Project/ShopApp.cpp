@@ -276,7 +276,67 @@ void saveOrderInfoToTekstFile(Client client, Order order){
 
      cout << "User not found." << endl;
  }
+void ShopApp::showOrderList(vector<Client>& clients, std::vector<Product> &products, map<string, Order>& orders){
+     fstream orderFile;
+     orderFile.open("/Users/yan.boika/Documents/programming/C++/endProject/order.txt");
 
+     string userName;
+     cout << "Please, enter your Name: ";
+     cin >> userName;
+     string userLastName;
+     cout << "Please, enter your Lastname: ";
+     cin >> userLastName;
+     int userCount = 0;
+
+     for(const auto& client : clients){
+         if (client.getName() == userName && client.getLastName() == userLastName){
+             userCount++;
+         }
+     }
+     if(userCount == 0){
+         cout << "User is not found " << endl;
+         return;
+     }
+
+     // Выводим информацию о заказах
+     cout << endl;
+     cout << "Orders information for user " << userName << " " << userLastName << ":" << endl << endl;
+
+
+
+     for(const auto& client : clients){
+         if (client.getName() == userName && client.getLastName() == userLastName){
+             if (orderFile.is_open()){
+                 bool foundUser = false;
+                 string temp;
+                 std::string userIdentifier = "Order of: " + userName + " " + userLastName + " user";
+                 while(getline(orderFile, temp)){
+                     if (temp.find(userIdentifier) != std::string::npos) { //std::string::npos Она обозначает конечную позицию или недопустимую позицию в строке.
+                         foundUser = true;
+                         cout << temp << endl;
+                         while (std::getline(orderFile, temp)) {
+                             if (temp == "------------------------") {
+                                 cout << temp << endl << endl;
+                                 break;
+                             }
+                             cout << temp << endl;
+                         }
+                     }
+                 }
+                 if (!foundUser) {
+                     std::cout << "No orders found for user: " << userName << " " << userLastName << std::endl;
+                     return;
+                 }
+             }
+             else{
+                 cout << "Failed to open file." << std::endl;
+                 return;
+             }
+         }
+
+     }
+     orderFile.close();
+ }
 
 void ShopApp::run(){
      int userCount = takeUserCount();
@@ -304,6 +364,9 @@ void ShopApp::run(){
              case 4:
                  createOrder(clients, products, orders);
                  break;
+            case 5:
+                showOrderList(clients, products, orders);
+                break;
             case 6:
                 showUserList(clients);
                 break;

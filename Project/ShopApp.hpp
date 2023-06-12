@@ -21,7 +21,7 @@
      void showAvailableProducts(std::vector<Product>& products);
      void showUserList(std::vector<Client>& clients);
      void createOrder(std::vector<Client>& clients, std::vector<Product>& products, std::map<std::string, Order>& orders);
-
+     void showOrderList(std::vector<Client>& clients, std::vector<Product>& products, std::map<std::string, Order>& orders);
  };
 
 #endif /* ShopApp_hpp */
