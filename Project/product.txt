@@ -1,0 +1,12 @@
+MacBook Pro;2000.00;20;10
+iPhone 12;999.00;10;20
+iPad Pro;799.00;20;15
+AirPods Pro;249.00;20;30
+iMac;1499.00;20;8
+Apple Watch Series 6;399.00;20;25
+HomePod;299.00;20;12
+Apple TV 4K;179.00;10;18
+Magic Keyboard;129.00;20;50
+AirTag;29.00;10;100
+Apple Pencil;185.00;20;50
+iPhone 14 Pro;1100.00;20;20

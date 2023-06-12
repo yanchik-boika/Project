@@ -4,6 +4,7 @@
 #include <vector>
 #include "Client.hpp"
 #include "ShopApp.hpp"
+#include "Product.hpp"
 
 
  using namespace std;
@@ -122,25 +123,73 @@ void ShopApp::newUserCreator(vector<Client>& clients) {
 
  }
 
+void ShopApp::loadProductFromFile(std::vector<Product> &products){
+     fstream productFile;
+     productFile.open("/Users/yan.boika/Documents/programming/C++/endProject/product.txt");
+
+     for(int i = 1; i <= 12; i++){
+         string productName;
+         string strPrice;
+         string strVatRate;
+         string strQuantity;
+
+         getline(productFile, productName, ';');
+         getline(productFile, strPrice, ';');
+         getline(productFile, strVatRate, ';');
+         getline(productFile, strQuantity);
+
+         double price = std::stod(strPrice); //преобзоравание string в double, потому что из файла получает строку
+         double vatRate = std::stod(strVatRate);
+         int quantity = stoi(strQuantity);
+         if(!productName.empty()){
+
+             Product newProduct(productName, price, vatRate, quantity);
+             products.push_back(newProduct);
+         }
+     }
+     productFile.close();
+ }
+
+ void ShopApp::showAvailableProducts(std::vector<Product> &products){
+     cout << endl;
+     cout << "Here our product list " << endl;
+     cout << endl;
+     for (const auto& product : products) {
+         cout << product.getProductName() << ";" << product.getPrice() << ";" << product.getVatRate() << ";" << product.getQuantity() << endl;
+     }
+     cout << endl;
+ }
+
+ void ShopApp::showUserList(vector<Client>& clients){
+     cout << endl;
+     for (const auto& client : clients) {
+         cout << client.getName() << ";" << client.getLastName() << ";" << client.getAddress() << ";" << client.getGender() << endl;
+     }
+ }
+
 void ShopApp::run(){
-    int userCount = takeUserCount();
-    vector<Client> clients;
+     int userCount = takeUserCount();
+     vector<Client> clients;
+     vector<Product> products;
 
-    int n;
-    menu();
-
+     int n;
+     menu();
+    
     while (cout << "What would you like to do: ", cin >> n) {
         switch(n){
             case 1:
                 menu();
                 break;
             case 2:
-                newUserCreator(clients);
-                userCount++;
-                break;
-            case 10:
-                cout << "Okay, we are ending our session :)" << endl;
-                return; // End program
+                 newUserCreator(clients);
+                 userCount++;
+                 break;
+             case 3:
+                 showAvailableProducts(products);
+                 break;
+             case 10:
+                 cout << "Okay, we are ending our session :)" << endl;
+                 return; // Завершить программу
             default:
                 cout << "Invalid option. Try again." << endl;
                 break;
